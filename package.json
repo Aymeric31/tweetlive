@@ -1,0 +1,18 @@
+{
+  "name": "tweetlive",
+  "version": "1.0.0",
+  "description": "",
+  "main": "file.js",
+  "dependencies": {
+    "got": "^11.8.2",
+    "needle": "^2.6.0",
+    "oauth-1.0a": "^2.2.6",
+    "twitter-v2": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
