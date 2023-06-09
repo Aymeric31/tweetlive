@@ -6,7 +6,8 @@ jobs:
   explore-gitHub-actions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
       - name: setup python
         uses: actions/setup-python@v4
         with:
@@ -24,6 +25,6 @@ jobs:
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_BEARER: ${{ secrets.TWITCH_BEARER }}
           TWITCH_USERNAME: ${{ secrets.TWITCH_USERNAME }}
-          run: python main.py
+        run: python main.py
       - name: Log execution
         run: echo "Execution of the task at 21:15"
