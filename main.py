@@ -4,10 +4,6 @@ import json
 import requests
 import os
 
-# Charger les clés et jetons depuis le fichier de configuration
-with open('config.json') as config_file:
-    config = json.load(config_file)
-
 # Credentials twitch & twitter
 consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
 consumer_secret = os.environ.get('TWITTER_CONSUMER_SECRET')
