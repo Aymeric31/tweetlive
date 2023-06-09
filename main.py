@@ -1,23 +1,21 @@
 import tweepy
 # from tweepy import OAuth1UserHandler, API
 import json
-import schedule
-import time
 import requests
+import os
 
 # Charger les clés et jetons depuis le fichier de configuration
 with open('config.json') as config_file:
     config = json.load(config_file)
 
 # Credentials twitch & twitter
-consumer_key = config['twitter']['consumer_key']
-consumer_secret = config['twitter']['consumer_secret']
-access_token = config['twitter']['access_token']
-access_token_secret = config['twitter']['access_token_secret']
-bearer_token = config['twitter']['bearer_token']
-username = config['twitch']["username"]
-client_id = config['twitch']["client_id"]
-twitch_bearer = config['twitch']["access_token"]
+consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
+consumer_secret = os.environ.get('TWITTER_CONSUMER_SECRET')
+access_token = os.environ.get('TWITTER_ACCESS_TOKEN')
+access_token_secret = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+username = os.environ.get('TWITCH_USERNAME')
+client_id = os.environ.get('TWITCH_CLIENT_ID')
+twitch_bearer = os.environ.get('TWITTER_CONSUMER_SECRET')
 
 def is_user_live(username, client_id):
     url = f"https://api.twitch.tv/helix/streams?user_login={username}"
@@ -53,12 +51,6 @@ def check_user_live(username, client_id, consumer_key, consumer_secret, access_t
         tweet_text = f"L'utilisateur {username} n'est pas en direct sur Twitch à 21h15. https://www.twitch.tv/pepepizza31"
         print(f"L'utilisateur {username} n'est pas en direct sur Twitch à 21h15.")
 
-# Utilisation de la planification avec schedule
-schedule.every().day.at("21:15").do(check_user_live, username, client_id, consumer_key, consumer_secret, access_token, access_token_secret)
-
 # Sans le schedule
-# check_user_live(username, client_id, consumer_key, consumer_secret, access_token, access_token_secret)
+check_user_live(username, client_id, consumer_key, consumer_secret, access_token, access_token_secret)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
