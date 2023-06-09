@@ -1,10 +1,9 @@
 name: run main.py
-run-name: Start my script everyday
 on:
   schedule:
     - cron: "15 21 * * *" # runs at 21:15
 jobs:
-  Explore-GitHub-Actions:
+  explore-gitHub-actions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,7 +15,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirement.txt
-      - name: execute py main
+      - name: Execute main.py
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
@@ -27,4 +26,4 @@ jobs:
           TWITCH_USERNAME: ${{ secrets.TWITCH_USERNAME }}
           run: python main.py
       - name: Log execution
-        run: echo "Exécution de la tâche à 21h15"
+        run: echo "Execution of the task at 21:15"
