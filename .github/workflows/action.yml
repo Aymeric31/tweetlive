@@ -1,13 +1,13 @@
-name: run script.py
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: run main.py
 on:
   schedule:
-    - cron: "15 21 * * *" # runs at 21:15
+    - cron: "48 22 * * *" # runs at 21:15
 jobs:
-  Explore-GitHub-Actions:
+  explore-gitHub-actions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
       - name: setup python
         uses: actions/setup-python@v4
         with:
@@ -16,16 +16,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirement.txt
-      - name: execute py main
+      - name: Execute main.py
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
-          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
-          TWITCH_ACCESS_TOKEN: ${{ secrets.TWITCH_ACCESS_TOKEN }}
+          TWITCH_BEARER: ${{ secrets.TWITCH_BEARER }}
           TWITCH_USERNAME: ${{ secrets.TWITCH_USERNAME }}
-          run: python main.py
+        run: python main.py
       - name: Log execution
-        run: echo "Exécution de la tâche à 21h15"
+        run: echo "Execution of the task at 21:15"
