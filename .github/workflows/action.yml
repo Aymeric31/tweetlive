@@ -1,7 +1,7 @@
 name: run main.py
 on:
   schedule:
-    - cron: "15 21 * * *" # runs at 21:15
+    - cron: "33 0 * * *" # runs at 21:15
 jobs:
   explore-gitHub-actions:
     runs-on: ubuntu-latest
