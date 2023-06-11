@@ -1,6 +1,9 @@
 import tweepy
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Credentials twitch & twitter
 consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
@@ -10,7 +13,7 @@ access_token_secret = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
 username = os.environ.get('TWITCH_USERNAME')
 client_id = os.environ.get('TWITCH_CLIENT_ID')
 twitch_bearer = os.environ.get('TWITCH_BEARER')
-
+print(consumer_key)
 def is_user_live(username, client_id):
     url = f"https://api.twitch.tv/helix/streams?user_login={username}"
     headers = {
