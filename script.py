@@ -38,6 +38,9 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
     api = tweepy.API(auth)
     tweet = api.update_status(tweet_text)
     tweet_id = tweet.id
+
+    with open("tweet_id.txt", "w") as file:
+        file.write(tweet_id)
     # time.sleep(60)
     # api.destroy_status(tweet_id)
 
