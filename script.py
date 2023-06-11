@@ -1,28 +1,26 @@
 import tweepy
-import json
 import schedule
 import time
+import os
 import requests
+from dotenv import load_dotenv
 
-# Charger les clés et jetons depuis le fichier de configuration
-with open('config.json') as config_file:
-    config = json.load(config_file)
+load_dotenv()
 
 # Credentials twitch & twitter
-consumer_key = config['twitter']['consumer_key']
-consumer_secret = config['twitter']['consumer_secret']
-access_token = config['twitter']['access_token']
-access_token_secret = config['twitter']['access_token_secret']
-bearer_token = config['twitter']['bearer_token']
-username = config['twitch']["username"]
-client_id = config['twitch']["client_id"]
-twitch_bearer = config['twitch']["access_token"]
+twitter_consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
+twitter_consumer_secret = os.environ.get('TWITTER_CONSUMER_SECRET')
+twitter_access_token = os.environ.get('TWITTER_ACCESS_TOKEN')
+twitter_access_token_secret = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+twitch_username = os.environ.get('TWITCH_USERNAME')
+twitch_client_id = os.environ.get('TWITCH_CLIENT_ID')
+twitch_access_token = os.environ.get('TWITCH_ACCESS_TOKEN')
 
-def is_user_live(username, client_id):
-    url = f"https://api.twitch.tv/helix/streams?user_login={username}"
+def is_user_live(twitch_username, twitch_client_id):
+    url = f"https://api.twitch.tv/helix/streams?user_login={twitch_username}"
     headers = {
-        "Client-ID": client_id,
-        "Authorization": f'Bearer {twitch_bearer}'
+        "Client-ID": twitch_client_id,
+        "Authorization": f'Bearer {twitch_access_token}'
     }
 
     response = requests.get(url, headers=headers)
@@ -33,29 +31,32 @@ def is_user_live(username, client_id):
     else:
         return False, None  # L'utilisateur n'est pas en direct
     
-def send_tweet(consumer_key, consumer_secret, access_token, access_token_secret, tweet_text):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
+def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text):
+    auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
+    auth.set_access_token(twitter_access_token, twitter_access_token_secret)
 
     api = tweepy.API(auth)
-    api.update_status(tweet_text)
+    tweet = api.update_status(tweet_text)
+    tweet_id = tweet.id
+    # time.sleep(60)
+    # api.destroy_status(tweet_id)
 
-def check_user_live(username, client_id, consumer_key, consumer_secret, access_token, access_token_secret):
-    is_live, game = is_user_live(username, client_id)
+def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret):
+    is_live, game = is_user_live(twitch_username, twitch_client_id)
 
     if is_live:
-        tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! https://www.twitch.tv/{username}"
-        send_tweet(consumer_key, consumer_secret, access_token, access_token_secret, tweet_text)
-        print(f"L'utilisateur {username} est en direct sur Twitch à 21h15.")
+        tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! https://www.twitch.tv/{twitch_username}"
+        # send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text)
+        print(f"L'utilisateur {twitch_username} est en direct sur Twitch à 21h15.")
         print(f"Tweet envoyé : {tweet_text}")
     else:
-        print(f"L'utilisateur {username} n'est pas en direct sur Twitch à 21h15.")
+        print(f"L'utilisateur {twitch_username} n'est pas en direct sur Twitch à 21h15.")
 
 # Utilisation de la planification avec schedule
-# schedule.every().day.at("21:15").do(check_user_live, username, client_id, consumer_key, consumer_secret, access_token, access_token_secret)
+# schedule.every().day.at("21:15").do(check_user_live, twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret)
 
 # Sans le schedule
-check_user_live(username, client_id, consumer_key, consumer_secret, access_token, access_token_secret)
+check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret)
 
 while True:
     schedule.run_pending()
