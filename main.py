@@ -37,7 +37,7 @@ def check_user_live(username, client_id, consumer_key, consumer_secret, access_t
     is_live, game = is_user_live(username, client_id)
 
     if is_live:
-        tweet_text = f"Je suis en direct sur Twitch sur {game} rejoins moi ! https://www.twitch.tv/pepepizza31"
+        tweet_text = f"Je suis en direct sur Twitch sur {game} rejoins moi ! https://www.twitch.tv/{username}"
         send_tweet(consumer_key, consumer_secret, access_token, access_token_secret, tweet_text)
         print(f"L'utilisateur {username} est en direct sur Twitch à 21h15.")
         print(f"Tweet envoyé : {tweet_text}")
