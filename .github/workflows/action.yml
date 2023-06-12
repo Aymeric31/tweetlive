@@ -29,7 +29,7 @@ jobs:
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_ACCESS_TOKEN: ${{ secrets.TWITCH_ACCESS_TOKEN }}
         run: |
-          python send_tweet.py --tweet-id-file tweet-id.txt
+          python main.py --tweet-id-file tweet-id.txt
       - name: Log execution
         run: echo "Execution of the task at 21:15"
 
