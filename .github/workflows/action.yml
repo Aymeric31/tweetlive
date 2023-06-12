@@ -37,8 +37,8 @@ jobs:
     needs: send_tweet
     runs-on: ubuntu-latest
     steps:
-      - name: Attendre 3 mn
-        run: sleep 180
+      - name: Attendre 1 mn
+        run: sleep 60
 
       - name: Exécuter le script Python pour supprimer le tweet
         env:
@@ -47,4 +47,4 @@ jobs:
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
         run: |
-          python delete_tweet.py --tweet-id-file tweet-id.txt
+          python ./delete_tweet.py --tweet-id-file tweet-id.txt
