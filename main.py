@@ -25,7 +25,7 @@ def is_user_live(twitch_username, twitch_client_id):
     data = response.json()
 
     if "data" in data and len(data["data"]) > 0:
-        return True, data["data"][0]["game_name"]  # L'utilisateur est en direct sur tel jeu
+        return True, data["data"][0]["game_name"].replace(" ", "")  # L'utilisateur est en direct sur tel jeu
     else:
         return False, None  # L'utilisateur n'est pas en direct
     
@@ -34,13 +34,17 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
     auth.set_access_token(twitter_access_token, twitter_access_token_secret)
 
     api = tweepy.API(auth)
-    api.update_status(tweet_text)
+    tweet = api.update_status(tweet_text)
+    tweet_id = tweet.id_str
+
+    with open("tweet-id.txt", "w") as file:
+        file.write(tweet_id)
 
 def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret):
     is_live, game = is_user_live(twitch_username, twitch_client_id)
 
     if is_live:
-        tweet_text = f"Je suis en direct sur Twitch sur {game} rejoins moi ! https://www.twitch.tv/{twitch_username}"
+        tweet_text = f"Je suis en direct sur Twitch sur {game} rejoins moi ! ⬇️ https://www.twitch.tv/{twitch_username}"
         send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text)
         print(f"L'utilisateur {twitch_username} est en direct sur Twitch à 21h15.")
         print(f"Tweet envoyé : {tweet_text}")

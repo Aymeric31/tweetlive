@@ -1,4 +1,4 @@
-name: run main.py
+name: send then delete tweet when live 3 hours later
 on:
   schedule:
     - cron: "10 19 * * *" # runs at 21:15
@@ -6,7 +6,7 @@ on:
     branches:
       - dev
 jobs:
-  explore-gitHub-actions:
+  send_tweet:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -28,6 +28,23 @@ jobs:
           TWITCH_USERNAME: ${{ secrets.TWITCH_USERNAME }}
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_ACCESS_TOKEN: ${{ secrets.TWITCH_ACCESS_TOKEN }}
-        run: python main.py
+        run: |
+          python send_tweet.py --tweet-id-file tweet-id.txt
       - name: Log execution
         run: echo "Execution of the task at 21:15"
+
+  delete_tweet:
+    needs: send_tweet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Attendre 3 mn
+        run: sleep 180
+
+      - name: Exécuter le script Python pour supprimer le tweet
+        env:
+          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: |
+          python delete_tweet.py --tweet-id-file tweet-id.txt

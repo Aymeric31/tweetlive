@@ -3,6 +3,7 @@ import schedule
 import time
 import os
 import requests
+import delete_tweet
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -27,7 +28,7 @@ def is_user_live(twitch_username, twitch_client_id):
     data = response.json()
     print(data)
     if "data" in data and len(data["data"]) > 0:
-        return True, data["data"][0]["game_name"]  # L'utilisateur est en direct
+        return True, data["data"][0]["game_name"].replace(" ", "")  # L'utilisateur est en direct
     else:
         return False, None  # L'utilisateur n'est pas en direct
     
@@ -37,19 +38,19 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
 
     api = tweepy.API(auth)
     tweet = api.update_status(tweet_text)
-    tweet_id = tweet.id
+    tweet_id = tweet.id_str
 
-    with open("tweet_id.txt", "w") as file:
+    with open("tweet-id.txt", "w") as file:
         file.write(tweet_id)
-    # time.sleep(60)
-    # api.destroy_status(tweet_id)
+    time.sleep(60)
+    delete_tweet.delete_tweet(tweet_id)
 
 def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret):
     is_live, game = is_user_live(twitch_username, twitch_client_id)
 
     if is_live:
-        tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! https://www.twitch.tv/{twitch_username}"
-        # send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text)
+        tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! ⬇️ https://www.twitch.tv/{twitch_username}"
+        send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text)
         print(f"L'utilisateur {twitch_username} est en direct sur Twitch à 21h15.")
         print(f"Tweet envoyé : {tweet_text}")
     else:
@@ -61,6 +62,6 @@ def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twi
 # Sans le schedule
 check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
