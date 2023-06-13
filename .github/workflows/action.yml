@@ -2,11 +2,10 @@ name: send then delete tweet when live 3 hours later
 on:
   schedule:
     - cron: "10 19 * * *" # runs at 21:15
-  push:
-    branches:
-      - dev
+
 jobs:
   send_tweet:
+    if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -44,8 +43,8 @@ jobs:
     needs: send_tweet
     runs-on: ubuntu-latest
     steps:
-      - name: Attendre 1 mn
-        run: sleep 60
+      - name: Attendre 1h30
+        run: sleep 5400
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: setup Python
