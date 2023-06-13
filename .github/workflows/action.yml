@@ -32,6 +32,13 @@ jobs:
           python main.py --tweet-id-file tweet-id.txt
       - name: Log execution
         run: echo "Execution of the task at 21:15"
+      - name: Upload tweet-id.txt artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: tweet-id
+          path: tweet-id.txt
+
 
   delete_tweet:
     needs: send_tweet
@@ -49,6 +56,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirement.txt
+      - name: Download tweet-id.txt artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tweet-id
+          path: .
       - name: Exécuter le script Python pour supprimer le tweet
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
