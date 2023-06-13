@@ -29,7 +29,7 @@ jobs:
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_ACCESS_TOKEN: ${{ secrets.TWITCH_ACCESS_TOKEN }}
         run: |
-          python main.py --tweet-id-file tweet-id.txt
+          python main.py
       - name: Log execution
         run: echo "Execution of the task at 21:15"
       - name: Upload tweet-id.txt artifact
@@ -68,4 +68,4 @@ jobs:
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
         run: |
-          python delete_tweet.py --tweet-id-file tweet-id.txt
+          python delete_tweet.py
