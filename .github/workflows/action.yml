@@ -1,7 +1,7 @@
 name: send then delete tweet when live 3 hours later
 on:
   schedule:
-    - cron: "10 19 * * *" # runs at 21:15
+    - cron: "10 19 * * *" # runs at 21:10
 
 jobs:
   send_tweet:
@@ -42,12 +42,16 @@ jobs:
   delete_tweet:
     needs: send_tweet
     runs-on: ubuntu-latest
-    if: ${{ fileExists('tweet-id.txt') }}
     steps:
-      - name: Attendre 1h30
-        run: sleep 5400
       - name: Checkout repo
         uses: actions/checkout@v3
+      - name: Download tweet-id.txt artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tweet-id
+          path: .
+      - name: Wait 3h
+        run: sleep 10800
       - name: setup Python
         uses: actions/setup-python@v4
         with:
@@ -56,12 +60,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirement.txt
-      - name: Download tweet-id.txt artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: tweet-id
-          path: .
-      - name: Exécuter le script Python pour supprimer le tweet
+      - name: Execute Python to delete tweet
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
