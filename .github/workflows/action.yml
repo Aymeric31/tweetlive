@@ -42,6 +42,7 @@ jobs:
   delete_tweet:
     needs: send_tweet
     runs-on: ubuntu-latest
+    if: ${{ fileExists('tweet-id.txt') }}
     steps:
       - name: Attendre 1h30
         run: sleep 5400
