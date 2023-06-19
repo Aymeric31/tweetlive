@@ -1,0 +1,70 @@
+name: send then delete tweet when live 3 hours later
+on:
+  schedule:
+    - cron: "10 19 * * *" # runs at 21:10
+
+jobs:
+  send_tweet:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirement.txt
+      - name: Execute main.py
+        env:
+          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          TWITCH_USERNAME: ${{ secrets.TWITCH_USERNAME }}
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_ACCESS_TOKEN: ${{ secrets.TWITCH_ACCESS_TOKEN }}
+        run: |
+          python main.py
+      - name: Log execution
+        run: echo "Execution of the task at 21:15"
+      - name: Upload tweet-id.txt artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: tweet-id
+          path: tweet-id.txt
+
+
+  delete_tweet:
+    needs: send_tweet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Download tweet-id.txt artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tweet-id
+          path: .
+      - name: Wait 3h
+        run: sleep 10800
+      - name: setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: install Python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirement.txt
+      - name: Execute Python to delete tweet
+        env:
+          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: |
+          python delete_tweet.py
