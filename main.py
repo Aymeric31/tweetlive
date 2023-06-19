@@ -129,12 +129,12 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
     with open("tweet-id.txt", "w") as file:
         file.write(tweet_id)
 
-def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret):
+def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token):
     is_live, game = is_user_live(twitch_username, twitch_client_id)
 
     if is_live:
         tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! ⬇️ https://www.twitch.tv/{twitch_username}"
-        send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text)
+        send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token, tweet_text)
         print(f"L'utilisateur {twitch_username} est en direct sur Twitch à 21h10.")
         print(f"Tweet envoyé : {tweet_text}")
     else:
