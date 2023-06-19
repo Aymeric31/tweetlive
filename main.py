@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import json
 import smtplib
+import re
 
 load_dotenv()
 
@@ -13,6 +14,7 @@ twitter_consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
 twitter_consumer_secret = os.environ.get('TWITTER_CONSUMER_SECRET')
 twitter_access_token = os.environ.get('TWITTER_ACCESS_TOKEN')
 twitter_access_token_secret = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+twitter_bearer_token = os.environ.get('TWITTER_BEARER_TOKEN')
 twitch_username = os.environ.get('TWITCH_USERNAME')
 twitch_client_id = os.environ.get('TWITCH_CLIENT_ID')
 twitch_access_token = os.environ.get('TWITCH_ACCESS_TOKEN')
@@ -103,19 +105,26 @@ def is_user_live(twitch_username, twitch_client_id):
     response = requests.get(url, headers=headers)
     data = response.json()
     get_remaining_time(twitch_client_id, twitch_client_secret)
+    game = data["data"][0]["game_name"].replace(" ", "")
+    game = re.sub(r'[^\w\s]', '', game)
 
     if "data" in data and len(data["data"]) > 0:
-        return True, data["data"][0]["game_name"].replace(" ", "")  # L'utilisateur est en direct sur tel jeu
+        return True, game  # L'utilisateur est en direct sur tel jeu
     else:
         return False, None  # L'utilisateur n'est pas en direct
     
-def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, tweet_text):
-    auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
-    auth.set_access_token(twitter_access_token, twitter_access_token_secret)
-
-    api = tweepy.API(auth)
-    tweet = api.update_status(tweet_text)
-    tweet_id = tweet.id_str
+def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token, tweet_text):
+    client = tweepy.Client( 
+        twitter_bearer_token, 
+        twitter_consumer_key, 
+        twitter_consumer_secret, 
+        twitter_access_token, 
+        twitter_access_token_secret, 
+        wait_on_rate_limit=True
+        )
+    # Envoi du tweet
+    response = client.create_tweet(text=tweet_text)
+    tweet_id = str(response.data['id'])
 
     with open("tweet-id.txt", "w") as file:
         file.write(tweet_id)
@@ -131,4 +140,4 @@ def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twi
     else:
         print(f"L'utilisateur {twitch_username} n'est pas en direct sur Twitch à 21h10.")
 
-check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret)
+check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token)
