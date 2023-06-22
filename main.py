@@ -32,7 +32,7 @@ def get_remaining_time(twitch_client_id, twitch_client_secret):
         "grant_type": "client_credentials"
     }
     response = requests.post(endpoint, headers=headers, data=data)
-
+    print(response)
     if response.status_code == 200:
         # Conversion de la réponse en JSON
         data = json.loads(response.text)
@@ -105,10 +105,11 @@ def is_user_live(twitch_username, twitch_client_id):
     response = requests.get(url, headers=headers)
     data = response.json()
     get_remaining_time(twitch_client_id, twitch_client_secret)
-    game = data["data"][0]["game_name"].replace(" ", "")
-    game = re.sub(r'[^\w\s]', '', game)
+
 
     if "data" in data and len(data["data"]) > 0:
+        game = data["data"][0]["game_name"].replace(" ", "")
+        game = re.sub(r'[^\w\s]', '', game)
         return True, game  # L'utilisateur est en direct sur tel jeu
     else:
         return False, None  # L'utilisateur n'est pas en direct
@@ -134,7 +135,7 @@ def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twi
 
     if is_live:
         tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! ⬇️ https://www.twitch.tv/{twitch_username}"
-        send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token, tweet_text)
+        # send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token, tweet_text)
         print(f"L'utilisateur {twitch_username} est en direct sur Twitch à 21h10.")
         print(f"Tweet envoyé : {tweet_text}")
     else:
