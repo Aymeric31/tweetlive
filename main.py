@@ -95,7 +95,7 @@ def send_email():
         # Fermeture de la connexion au serveur SMTP
         server.quit()
 
-def is_user_live(twitch_username, twitch_client_id):
+def is_user_live(twitch_username, twitch_client_id, twitch_access_token, twitch_client_secret):
     url = f"https://api.twitch.tv/helix/streams?user_login={twitch_username}"
     headers = {
         "Client-ID": twitch_client_id,
@@ -131,7 +131,7 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
         file.write(tweet_id)
 
 def check_user_live(twitch_username, twitch_client_id, twitter_consumer_key, twitter_consumer_secret, twitter_access_token, twitter_access_token_secret, twitter_bearer_token):
-    is_live, game = is_user_live(twitch_username, twitch_client_id)
+    is_live, game = is_user_live(twitch_username, twitch_client_id, twitch_access_token, twitch_client_secret)
 
     if is_live:
         tweet_text = f"Je suis en direct sur Twitch sur #{game} rejoins moi ! ⬇️ https://www.twitch.tv/{twitch_username}"
