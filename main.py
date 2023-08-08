@@ -130,7 +130,7 @@ def get_twitch_live_info(twitch_username, twitch_client_id, twitch_access_token,
         title = stream_data["title"]
         return True, game_name, formatted_started_at, thumbnail_url, title  # L'utilisateur est en direct
     else:
-        return False, None, None, None  # L'utilisateur n'est pas en direct
+        return False, None, None, None, None  # L'utilisateur n'est pas en direct
 
 # Fonction pour envoyer le message Discord au format embed
 def send_discord_embed(discord_webhook, twitch_username, twitch_live_info):
