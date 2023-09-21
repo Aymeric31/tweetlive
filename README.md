@@ -6,9 +6,8 @@ Welcome to the Tweet Live project!
 - [Introduction](#introduction)
 - [Features](#features)
 - [Getting Started](#getting-started)
-  - [Forking the Project](#forking-the-project)
   - [Prerequisites](#prerequisites)
-- [GitHub Actions Integration](#github-actions-integration)
+- [Usage](#usage)
 - [License](#license)
 - [Technologies Used](#technologies-used)
 
@@ -25,9 +24,7 @@ Tweet Live is a Python-based application designed to help users stay updated on 
 
 ## Getting Started
 
-### Forking the Project
-
-1. Start by forking this repository to your GitHub account. Click the "Fork" button at the top right of this page to create your own copy of the project.
+These instructions will help you set up and run the project on Github Action.
 
 ### Prerequisites
 
@@ -35,7 +32,7 @@ Before you begin, ensure you have met the following requirements:
 - **Discord Webhook URL:** You need to create a Discord Webhook to receive notifications and send the message. You can create one from your Discord server by following the Discord documentation on setting up webhooks.
 - **GitHub Repository with GitHub Actions Enabled:** You should have a GitHub repository where you intend to use this project. Ensure that GitHub Actions is enabled for your repository. You can check and enable it in the "Actions" tab of the repository.
 - **Twitch Developer account** with client credentials (client ID and client secret).
-- **Twitter Developer account*** with API keys and access tokens.
+- **Twitter Developer account** with API keys and access tokens.
 
 ## Usage
 
@@ -73,9 +70,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Technologies Used
 
-- Python
+- Python ( lib: tweepy, dotenv )
 - Twitch API
 - Twitter API
 - Discord API
 - SMTP (for email notifications)
-- dotenv (for managing environment variables)
