@@ -1,7 +1,7 @@
 name: send then delete tweet when live 3 hours later
 on:
   schedule:
-    - cron: "10 19 * * *" # runs at 21:10
+    - cron: "10 20 * * *" # runs at 21:10
 
 jobs:
   send_tweet:
