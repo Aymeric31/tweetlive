@@ -1,7 +1,6 @@
 name: send then delete tweet when live 3 hours later
 on:
-  schedule:
-    - cron: "10 19 * * *" # runs at 21:10
+  workflow_dispatch:
 
 jobs:
   send_tweet:
