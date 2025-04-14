@@ -1,7 +1,6 @@
 name: send then delete tweet when live 3 hours later
 on:
-  schedule:
-    - cron: "10 19 * * *" # runs at 21:10
+  workflow_dispatch:
 
 jobs:
   send_tweet:
@@ -9,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup python
         uses: actions/setup-python@v4
         with:
@@ -35,7 +34,7 @@ jobs:
         run: echo "Execution of the task at 21:15"
       - name: Upload tweet-id.txt artifact
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tweet-id
           path: tweet-id.txt
@@ -46,9 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download tweet-id.txt artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: tweet-id
           path: .
