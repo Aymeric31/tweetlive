@@ -185,7 +185,7 @@ def send_discord_message(discord_webhook, twitch_username, twitch_live_info):
     if twitch_live_info:
         embed_data = construct_embed_data(twitch_username, twitch_live_info)
         # Set content for the message, emoji ID for the Twitch emoji
-        content = f"everyone {twitch_username} est en live sur Twitch <:Twitch:707494410778050620>!"
+        content = f"@everyone {twitch_username} est en live sur Twitch <:Twitch:707494410778050620>!"
         data = {"content": content, "embeds": [embed_data]}
         headers = {"Content-Type": "application/json"}
         
