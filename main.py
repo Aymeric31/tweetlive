@@ -1,11 +1,11 @@
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
-from check_access_token import check_access_token_validity, format_duration
-from send_mail import send_email
-from twitch_utils import get_twitch_live_info
-from twitter_utils import send_tweet
-from discord_utils import send_discord_message
+from utils.check_access_token import check_access_token_validity, format_duration
+from utils.send_mail import send_email
+from utils.twitch_utils import get_twitch_live_info
+from utils.twitter_utils import send_tweet
+from utils.discord_utils import send_discord_message
 
 load_dotenv()
 
