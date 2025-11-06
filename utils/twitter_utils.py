@@ -16,8 +16,9 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
         tweet_id = str(response.data['id'])
 
         # Save the tweet ID to a file
-        with open("tweet-id.txt", "w") as file:
+        with open("./tweet-id.txt", "w") as file:
             file.write(tweet_id)
+        SystemExit
 
         print(f"Tweet sent successfully! Tweet ID: {tweet_id}")
     except tweepy.TweepyException as e:
