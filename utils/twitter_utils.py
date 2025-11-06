@@ -17,8 +17,8 @@ def send_tweet(twitter_consumer_key, twitter_consumer_secret, twitter_access_tok
         tweet_id = str(response.data['id'])
 
         # Save the tweet ID to a file
-        root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        tweet_file = os.path.join(root_path, "tweet-id.txt")
+        workspace = os.getenv("GITHUB_WORKSPACE") or os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        tweet_file = os.path.join(workspace, "tweet-id.txt")
         with open(tweet_file, "w", encoding="utf-8") as file:
             file.write(tweet_id)
 
