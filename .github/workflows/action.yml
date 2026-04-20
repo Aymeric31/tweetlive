@@ -34,7 +34,7 @@ jobs:
         run: echo "Execution of the task at 21:15"
       - name: Upload tweet-id.txt artifact
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v6
         with:
           name: tweet-id
           path: tweet-id.txt
